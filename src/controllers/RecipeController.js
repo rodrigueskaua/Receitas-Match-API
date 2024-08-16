@@ -39,3 +39,17 @@ exports.update = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+exports.destroy = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedRecipe = await Recipe.findByIdAndDelete(id);
+    
+    if (!deletedRecipe) {
+      return res.status(404).json({ message: "Receita não encontrada" });
+    }
+    res.json({ message: "Receita excluída com sucesso" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
