@@ -11,3 +11,12 @@ exports.create = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+exports.getAll = async (req, res) => {
+  try {
+      const recipes = await Recipe.find();
+      res.json(recipes);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
