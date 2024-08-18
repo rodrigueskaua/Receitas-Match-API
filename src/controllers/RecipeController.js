@@ -30,11 +30,19 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params;
-  const { name, ingredients, instructions } = req.body;
+  const { name, ingredients, instructions, categoryId } = req.body;
+  
+  if (categoryId) {
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      return res.status(400).json({ message: 'Categoria não encontrada' });
+    }
+  }
+  
   try {
     const updatedRecipe = await Recipe.findByIdAndUpdate(
       id,
-      { name, ingredients, instructions },
+      { name, ingredients, instructions, category: categoryId },
       { new: true, runValidators: true }
     );
     
