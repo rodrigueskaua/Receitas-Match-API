@@ -1,4 +1,5 @@
 const Recipe = require('../models/Recipe');
+const Category = require('../models/Category');
 
 exports.getAll = async (req, res) => {
   try {
@@ -10,9 +11,15 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const { name, ingredients, instructions } = req.body;
+  const { name, ingredients, instructions, categoryId } = req.body;
+  
+  const category = await Category.findById(categoryId);
+  if (!category) {
+    return res.status(400).json({ message: 'Categoria não encontrada' });
+  }
+  
   try {
-    const newRecipe = new Recipe({ name, ingredients, instructions });
+    const newRecipe = new Recipe({ name, ingredients, instructions, category: categoryId });
     await newRecipe.save();
     
     res.status(201).json(newRecipe);
